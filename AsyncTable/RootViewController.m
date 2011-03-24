@@ -126,7 +126,7 @@
 {
     Downloader *iconDownloader = [[Downloader alloc]init];
     iconDownloader.delegate = self;
-    [iconDownloader get:[NSURL URLWithString:@""]];
+    [iconDownloader get:[NSURL URLWithString:@"https://secure.gravatar.com/avatar/5a0c44ac746299d5e7902bc847508b5e?s=140&d=https://d3nwyuy0nl342s.cloudfront.net%2Fimages%2Fgravatars%2Fgravatar-140.png"]];
     [iconDownloader release];
 }
 
@@ -142,14 +142,15 @@
 
 // called by our ImageDownloader when an icon is ready to be displayed
 -(void)downloader:(NSURLConnection *)conn didLoad:(NSMutableData *)data{
-    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:indexPath];
+    NSLog(@"hogehuga");
+    /*IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:indexPath];
     if (iconDownloader != nil)
     {
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
         
         // Display the newly loaded image
         cell.imageView.image = iconDownloader.appRecord.appIcon;
-    }
+    }*/
 }
 
 
