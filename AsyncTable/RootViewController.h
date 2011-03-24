@@ -12,5 +12,4 @@
     NSMutableDictionary * imageCache;
 }
 @property (nonatomic,retain) NSMutableDictionary * imageCache; 
-
 @end

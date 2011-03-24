@@ -59,7 +59,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 0;
+    return 100;
 }
 
 -(void)requestImage{
@@ -122,6 +122,53 @@
     return YES;
 }
 */
+- (void)startIconDownload:(NSIndexPath *)indexPath
+{
+    Downloader *iconDownloader = [[Downloader alloc]init];
+    iconDownloader.delegate = self;
+    [iconDownloader get:[NSURL URLWithString:@""]];
+    [iconDownloader release];
+}
+
+// this method is used in case the user scrolled into a set of cells that don't have their app icons yet
+- (void)loadImagesForOnscreenRows
+{
+        NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
+        for (NSIndexPath *indexPath in visiblePaths)
+        {
+            [self startIconDownload:indexPath];
+        }
+}
+
+// called by our ImageDownloader when an icon is ready to be displayed
+-(void)downloader:(NSURLConnection *)conn didLoad:(NSMutableData *)data{
+    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader != nil)
+    {
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
+        
+        // Display the newly loaded image
+        cell.imageView.image = iconDownloader.appRecord.appIcon;
+    }
+}
+
+
+#pragma mark -
+#pragma mark Deferred image loading (UIScrollViewDelegate)
+
+// Load images for all onscreen rows when scrolling is finished
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate)
+	{
+        [self loadImagesForOnscreenRows];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self loadImagesForOnscreenRows];
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
