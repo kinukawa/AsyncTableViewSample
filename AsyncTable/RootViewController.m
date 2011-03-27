@@ -65,8 +65,13 @@
     return 100;
 }
 
--(void)requestImage{
-    
+- (void)startIconDownload:(NSIndexPath *)indexPath
+{
+    Downloader *iconDownloader = [[[Downloader alloc]init]autorelease];
+    iconDownloader.delegate = self;
+    [iconDownloader get:[NSURL URLWithString:@"https://secure.gravatar.com/avatar/5a0c44ac746299d5e7902bc847508b5e?s=140&d=https://d3nwyuy0nl342s.cloudfront.net%2Fimages%2Fgravatars%2Fgravatar-140.png"]];
+    iconDownloader.identifier = indexPath;
+    [downloaderManager setObject:iconDownloader forKey:indexPath];
 }
 
 // Customize the appearance of table view cells.
@@ -78,24 +83,18 @@
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
-
+    
     // Configure the cell.
     if ([imageCache objectForKey:indexPath]) {
         cell.imageView.image = [imageCache objectForKey:indexPath];
     }else{
+        if (self.tableView.dragging == NO && self.tableView.decelerating == NO)
+        {
+            [self startIconDownload:indexPath];
+        }
         cell.imageView.image = [UIImage imageNamed:@"defaulticon"];
     }
-    NSLog(@"downloader count = %d",[downloaderManager count]);
     return cell;
-}
-
-- (void)startIconDownload:(NSIndexPath *)indexPath
-{
-    Downloader *iconDownloader = [[[Downloader alloc]init]autorelease];
-    iconDownloader.delegate = self;
-    [iconDownloader get:[NSURL URLWithString:@"https://secure.gravatar.com/avatar/5a0c44ac746299d5e7902bc847508b5e?s=140&d=https://d3nwyuy0nl342s.cloudfront.net%2Fimages%2Fgravatars%2Fgravatar-140.png"]];
-    iconDownloader.identifier = indexPath;
-    [downloaderManager setObject:iconDownloader forKey:indexPath];
 }
 
 // this method is used in case the user scrolled into a set of cells that don't have their app icons yet
