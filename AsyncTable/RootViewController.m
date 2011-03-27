@@ -104,7 +104,9 @@
     NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
     for (NSIndexPath *indexPath in visiblePaths)
     {
-        [self startIconDownload:indexPath];
+        if(![imageCache objectForKey:indexPath]){
+            [self startIconDownload:indexPath];
+        }
     }
 }
 
