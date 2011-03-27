@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		107EAABC133F060E0010D38B /* defaulticon.png in Resources */ = {isa = PBXBuildFile; fileRef = 107EAABB133F060E0010D38B /* defaulticon.png */; };
 		80A64625133B4863005586F5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80A64624133B4863005586F5 /* UIKit.framework */; };
 		80A64627133B4863005586F5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80A64626133B4863005586F5 /* Foundation.framework */; };
 		80A64629133B4863005586F5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80A64628133B4863005586F5 /* CoreGraphics.framework */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		107EAABB133F060E0010D38B /* defaulticon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = defaulticon.png; sourceTree = "<group>"; };
 		80A64620133B4863005586F5 /* AsyncTable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AsyncTable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80A64624133B4863005586F5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		80A64626133B4863005586F5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -91,6 +93,7 @@
 				80A6462B133B4863005586F5 /* Supporting Files */,
 				80A6464A133B4A04005586F5 /* Downloader.h */,
 				80A6464B133B4A04005586F5 /* Downloader.m */,
+				107EAABB133F060E0010D38B /* defaulticon.png */,
 			);
 			path = AsyncTable;
 			sourceTree = "<group>";
@@ -156,6 +159,7 @@
 				80A6462F133B4863005586F5 /* InfoPlist.strings in Resources */,
 				80A64638133B4863005586F5 /* MainWindow.xib in Resources */,
 				80A6463E133B4863005586F5 /* RootViewController.xib in Resources */,
+				107EAABC133F060E0010D38B /* defaulticon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,6 +286,7 @@
 				80A64643133B4863005586F5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

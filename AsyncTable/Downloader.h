@@ -13,17 +13,17 @@
 @interface Downloader : NSObject {
     NSMutableData * buffer;
 	id <DownloaderDelegate> delegate;
-	id tag;
+	id identifier;
 }
 
 -(bool)get:(NSURL*)url;
 
 @property (nonatomic,assign) id delegate;
 @property (nonatomic,retain) NSMutableData * buffer;
-@property (nonatomic,retain) id tag;
+@property (nonatomic,retain) id identifier;
 @end
 
 @protocol DownloaderDelegate<NSObject>
--(void)downloader:(NSURLConnection *)conn didLoad:(NSMutableData *)data;
+-(void)downloader:(NSURLConnection *)conn didLoad:(NSMutableData *)data identifier:(id)identifier;
 @end
 

@@ -10,16 +10,19 @@
 
 @implementation RootViewController
 @synthesize imageCache;
+@synthesize downloaderManager;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.imageCache = [NSMutableDictionary dictionary];
+    self.downloaderManager = [NSMutableDictionary dictionary];
 }
 
 - (void)dealloc
 {
     self.imageCache = nil;
+    self.downloaderManager = nil;
     [super dealloc];
 }
 
@@ -77,8 +80,11 @@
     }
 
     // Configure the cell.
-    
-    //cell.imageView.image = 
+    if ([imageCache objectForKey:indexPath]) {
+        cell.imageView.image = [imageCache objectForKey:indexPath];
+    }else{
+        cell.imageView.image = [UIImage imageNamed:@"defaulticon"];
+    }
     return cell;
 }
 
@@ -127,6 +133,8 @@
     Downloader *iconDownloader = [[Downloader alloc]init];
     iconDownloader.delegate = self;
     [iconDownloader get:[NSURL URLWithString:@"https://secure.gravatar.com/avatar/5a0c44ac746299d5e7902bc847508b5e?s=140&d=https://d3nwyuy0nl342s.cloudfront.net%2Fimages%2Fgravatars%2Fgravatar-140.png"]];
+    iconDownloader.identifier = indexPath;
+    [downloaderManager setObject:iconDownloader forKey:indexPath];
     [iconDownloader release];
 }
 
@@ -141,16 +149,14 @@
 }
 
 // called by our ImageDownloader when an icon is ready to be displayed
--(void)downloader:(NSURLConnection *)conn didLoad:(NSMutableData *)data{
-    NSLog(@"hogehuga");
-    /*IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:indexPath];
-    if (iconDownloader != nil)
-    {
-        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
+-(void)downloader:(NSURLConnection *)conn didLoad:(NSMutableData *)data identifier:(id)identifier{
+    NSIndexPath *indexPath = identifier;
+    NSLog(@"index = %d",[indexPath row]);
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         
-        // Display the newly loaded image
-        cell.imageView.image = iconDownloader.appRecord.appIcon;
-    }*/
+    // Display the newly loaded image
+    cell.imageView.image = [UIImage imageWithData:data];
+    [imageCache setObject:[UIImage imageWithData:data] forKey:indexPath];
 }
 
 

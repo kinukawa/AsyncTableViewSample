@@ -10,6 +10,9 @@
 #import "Downloader.h"
 @interface RootViewController : UITableViewController {
     NSMutableDictionary * imageCache;
+    NSMutableDictionary * downloaderManager;
+    
 }
 @property (nonatomic,retain) NSMutableDictionary * imageCache; 
+@property (nonatomic,retain) NSMutableDictionary * downloaderManager; 
 @end

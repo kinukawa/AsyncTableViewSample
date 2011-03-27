@@ -12,12 +12,12 @@
 @implementation Downloader
 @synthesize buffer;
 @synthesize delegate;
-@synthesize tag;
+@synthesize identifier;
 
 - (void) dealloc {
 	self.buffer = nil;
     self.delegate = nil;
-    self.tag = nil;
+    self.identifier = nil;
     [super dealloc];
 }
 
@@ -55,8 +55,8 @@
 //受信終了
 - (void)connectionDidFinishLoading:(NSURLConnection *)conn {
 	NSLog(@"Succeed!! Received %d bytes of data", [buffer length]);
-	if([delegate respondsToSelector:@selector(downloader:didLoad:)]){
-        [delegate downloader:conn didLoad:buffer];
+	if([delegate respondsToSelector:@selector(downloader:didLoad:identifier:)]){
+        [delegate downloader:conn didLoad:buffer identifier:self.identifier];
     }
 }
 
