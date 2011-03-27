@@ -85,7 +85,56 @@
     }else{
         cell.imageView.image = [UIImage imageNamed:@"defaulticon"];
     }
+    NSLog(@"downloader count = %d",[downloaderManager count]);
     return cell;
+}
+
+- (void)startIconDownload:(NSIndexPath *)indexPath
+{
+    Downloader *iconDownloader = [[[Downloader alloc]init]autorelease];
+    iconDownloader.delegate = self;
+    [iconDownloader get:[NSURL URLWithString:@"https://secure.gravatar.com/avatar/5a0c44ac746299d5e7902bc847508b5e?s=140&d=https://d3nwyuy0nl342s.cloudfront.net%2Fimages%2Fgravatars%2Fgravatar-140.png"]];
+    iconDownloader.identifier = indexPath;
+    [downloaderManager setObject:iconDownloader forKey:indexPath];
+}
+
+// this method is used in case the user scrolled into a set of cells that don't have their app icons yet
+- (void)loadImagesForOnscreenRows
+{
+    NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
+    for (NSIndexPath *indexPath in visiblePaths)
+    {
+        [self startIconDownload:indexPath];
+    }
+}
+
+// called by our ImageDownloader when an icon is ready to be displayed
+-(void)downloader:(NSURLConnection *)conn didLoad:(NSMutableData *)data identifier:(id)identifier{
+    NSIndexPath *indexPath = identifier;
+    NSLog(@"index = %d",[indexPath row]);
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if(cell != nil){
+        // Display the newly loaded image
+        cell.imageView.image = [UIImage imageWithData:data];
+        [imageCache setObject:[UIImage imageWithData:data] forKey:indexPath];
+        
+        //----Ç±Ç±Ç≈äJï˙ÇµÇƒÇ¢ÇÈÇ™ÅAóéÇøÇ»Ç¢Ç©ÅH
+        [downloaderManager removeObjectForKey:indexPath];
+    }
+}
+
+// Load images for all onscreen rows when scrolling is finished
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate)
+	{
+        [self loadImagesForOnscreenRows];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self loadImagesForOnscreenRows];
 }
 
 /*
@@ -128,54 +177,6 @@
     return YES;
 }
 */
-- (void)startIconDownload:(NSIndexPath *)indexPath
-{
-    Downloader *iconDownloader = [[Downloader alloc]init];
-    iconDownloader.delegate = self;
-    [iconDownloader get:[NSURL URLWithString:@"https://secure.gravatar.com/avatar/5a0c44ac746299d5e7902bc847508b5e?s=140&d=https://d3nwyuy0nl342s.cloudfront.net%2Fimages%2Fgravatars%2Fgravatar-140.png"]];
-    iconDownloader.identifier = indexPath;
-    [downloaderManager setObject:iconDownloader forKey:indexPath];
-    [iconDownloader release];
-}
-
-// this method is used in case the user scrolled into a set of cells that don't have their app icons yet
-- (void)loadImagesForOnscreenRows
-{
-        NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
-        for (NSIndexPath *indexPath in visiblePaths)
-        {
-            [self startIconDownload:indexPath];
-        }
-}
-
-// called by our ImageDownloader when an icon is ready to be displayed
--(void)downloader:(NSURLConnection *)conn didLoad:(NSMutableData *)data identifier:(id)identifier{
-    NSIndexPath *indexPath = identifier;
-    NSLog(@"index = %d",[indexPath row]);
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        
-    // Display the newly loaded image
-    cell.imageView.image = [UIImage imageWithData:data];
-    [imageCache setObject:[UIImage imageWithData:data] forKey:indexPath];
-}
-
-
-#pragma mark -
-#pragma mark Deferred image loading (UIScrollViewDelegate)
-
-// Load images for all onscreen rows when scrolling is finished
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    if (!decelerate)
-	{
-        [self loadImagesForOnscreenRows];
-    }
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    [self loadImagesForOnscreenRows];
-}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
